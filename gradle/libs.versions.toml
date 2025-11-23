@@ -5,7 +5,7 @@ targetSdk = "36"
 minSdk = "24"
 
 # Java/Kotlin Version
-jvmTarget = "17"
+jvmTarget = "21"
 
 # Plugin Versions
 agp = "8.13.0"
