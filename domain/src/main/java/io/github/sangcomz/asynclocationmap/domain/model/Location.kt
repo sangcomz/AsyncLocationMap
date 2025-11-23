@@ -1,4 +1,4 @@
-package com.example.asynclocationmap.domain.model
+package io.github.sangcomz.asynclocationmap.domain.model
 
 /**
  * Domain Model for Location

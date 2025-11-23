@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.asynclocationmap.presentation"
+    namespace = "io.github.sangcomz.asynclocationmap.presentation"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
@@ -53,6 +53,7 @@ dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)
     implementation(libs.compose.material3)
+    implementation(libs.compose.material.icons.extended)
     implementation(libs.compose.ui.tooling.preview)
     implementation(libs.compose.activity)
     debugImplementation(libs.compose.ui.tooling)
@@ -60,6 +61,7 @@ dependencies {
     // Lifecycle
     implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.lifecycle.runtime.compose)
 
     // Hilt
     implementation(libs.hilt.android)

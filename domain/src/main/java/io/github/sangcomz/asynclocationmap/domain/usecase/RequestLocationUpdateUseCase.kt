@@ -1,6 +1,6 @@
-package com.example.asynclocationmap.domain.usecase
+package io.github.sangcomz.asynclocationmap.domain.usecase
 
-import com.example.asynclocationmap.domain.repository.LocationRepository
+import io.github.sangcomz.asynclocationmap.domain.repository.LocationRepository
 import javax.inject.Inject
 
 /**

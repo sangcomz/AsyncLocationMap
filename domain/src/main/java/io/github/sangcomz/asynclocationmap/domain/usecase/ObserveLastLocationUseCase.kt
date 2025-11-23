@@ -1,7 +1,7 @@
-package com.example.asynclocationmap.domain.usecase
+package io.github.sangcomz.asynclocationmap.domain.usecase
 
-import com.example.asynclocationmap.domain.model.Location
-import com.example.asynclocationmap.domain.repository.LocationRepository
+import io.github.sangcomz.asynclocationmap.domain.model.Location
+import io.github.sangcomz.asynclocationmap.domain.repository.LocationRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

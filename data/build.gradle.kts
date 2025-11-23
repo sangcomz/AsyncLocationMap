@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.asynclocationmap.data"
+    namespace = "io.github.sangcomz.asynclocationmap.data"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {

@@ -1,6 +1,6 @@
-package com.example.asynclocationmap.domain.repository
+package io.github.sangcomz.asynclocationmap.domain.repository
 
-import com.example.asynclocationmap.domain.model.Location
+import io.github.sangcomz.asynclocationmap.domain.model.Location
 import kotlinx.coroutines.flow.Flow
 
 /**
