@@ -24,7 +24,7 @@ import javax.inject.Inject
  * - onCreate()에서 WorkManager.initialize()를 명시적으로 호출해야 합니다
  */
 @HiltAndroidApp
-class MyApplication : Application() {
+class MyApplication : Application(), Configuration.Provider {
 
     /**
      * HiltWorkerFactory
@@ -35,14 +35,8 @@ class MyApplication : Application() {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
 
-    override fun onCreate() {
-        super.onCreate()
-
-        // WorkManager를 HiltWorkerFactory와 함께 수동으로 초기화
-        val config = Configuration.Builder()
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
             .setWorkerFactory(workerFactory)
             .build()
-
-        WorkManager.initialize(this, config)
-    }
 }
