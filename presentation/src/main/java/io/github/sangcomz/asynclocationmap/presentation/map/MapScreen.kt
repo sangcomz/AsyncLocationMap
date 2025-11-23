@@ -23,6 +23,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
@@ -89,7 +90,10 @@ fun MapScreen(
     // 현재 위치가 변경되면 카메라 이동
     LaunchedEffect(uiState.lastCurrentLocation) {
         uiState.lastCurrentLocation?.let { location ->
-            cameraPositionState.position = CameraPosition.fromLatLngZoom(location, DEFAULT_ZOOM)
+            cameraPositionState.animate(
+                update = CameraUpdateFactory.newLatLngZoom(location, DEFAULT_ZOOM),
+                durationMs = 1000
+            )
         }
     }
 

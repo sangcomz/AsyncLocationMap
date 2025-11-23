@@ -9,7 +9,8 @@ jvmTarget = "21"
 
 # Plugin Versions
 agp = "8.13.0"
-kotlin = "2.2.21"
+kotlin = "2.1.0"
+ksp = "2.1.0-1.0.29"
 
 # Library Versions
 compose-bom = "2025.10.01"
@@ -102,6 +103,6 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
