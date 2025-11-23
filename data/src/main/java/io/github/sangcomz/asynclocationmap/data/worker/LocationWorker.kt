@@ -63,10 +63,7 @@ class LocationWorker @AssistedInject constructor(
      * Android 8.0 이상에서는 알림 채널을 생성합니다.
      */
     private fun createForegroundInfo(): ForegroundInfo {
-        // 알림 채널 생성 (Android 8.0 이상)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createNotificationChannel()
-        }
+        createNotificationChannel()
 
         // 알림 생성
         val notification = NotificationCompat.Builder(applicationContext, NOTIFICATION_CHANNEL_ID)

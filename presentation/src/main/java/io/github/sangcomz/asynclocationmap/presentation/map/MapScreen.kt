@@ -1,6 +1,6 @@
 package io.github.sangcomz.asynclocationmap.presentation.map
 
-import androidx.compose.foundation.background
+import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -83,9 +83,13 @@ fun MapScreen(
     }
 
     // 백그라운드 위치 권한 상태 관리 (Android 10 이상)
-    val backgroundLocationPermissionState = rememberPermissionState(
-        permission = android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
-    )
+    val backgroundLocationPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        rememberPermissionState(
+            permission = android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
+        )
+    } else {
+        null
+    }
 
     // 에러 메시지 표시
     LaunchedEffect(uiState.error) {
