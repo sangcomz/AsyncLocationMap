@@ -37,6 +37,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapsComposeExperimentalApi
 import com.google.maps.android.compose.clustering.Clustering
 import com.google.maps.android.compose.rememberCameraPositionState
 
@@ -63,7 +64,7 @@ private const val DEFAULT_LAT = 37.5665
 private const val DEFAULT_LNG = 126.9780
 private const val DEFAULT_ZOOM = 15f
 
-@OptIn(ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalPermissionsApi::class, MapsComposeExperimentalApi::class)
 @Composable
 fun MapScreen(
     viewModel: MapViewModel = hiltViewModel()
