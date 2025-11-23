@@ -37,8 +37,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.clustering.Clustering
 import com.google.maps.android.compose.rememberCameraPositionState
 
 /**
@@ -212,14 +211,10 @@ fun MapScreen(
                     modifier = Modifier.fillMaxSize(),
                     cameraPositionState = cameraPositionState
                 ) {
-                    // 저장된 모든 위치에 마커 표시
-                    uiState.locations.forEach { locationUiModel ->
-                        Marker(
-                            state = MarkerState(position = locationUiModel.latLng),
-                            title = "위치",
-                            snippet = "위도: ${locationUiModel.latLng.latitude}, 경도: ${locationUiModel.latLng.longitude}"
-                        )
-                    }
+                    // 저장된 모든 위치에 클러스터링 마커 표시
+                    Clustering(
+                        items = uiState.locations
+                    )
                 }
             }
         }
