@@ -51,3 +51,4 @@ object DatabaseModule {
         return database.locationDao()
     }
 }
+

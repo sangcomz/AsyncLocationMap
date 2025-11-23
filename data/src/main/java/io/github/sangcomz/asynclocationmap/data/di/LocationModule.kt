@@ -2,7 +2,9 @@ package io.github.sangcomz.asynclocationmap.data.di
 
 import android.content.Context
 import androidx.work.WorkManager
+import io.github.sangcomz.asynclocationmap.data.datasource.LocationLocalDataSource
 import io.github.sangcomz.asynclocationmap.data.datasource.LocationRemoteDataSource
+import io.github.sangcomz.asynclocationmap.data.datasource.RoomLocationDataSource
 import io.github.sangcomz.asynclocationmap.data.datasource.WorkManagerLocationDataSource
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -58,11 +60,16 @@ object LocationModule {
 /**
  * Location Data Source Module
  *
- * LocationRemoteDataSource의 구현체를 바인딩하는 Hilt Module입니다.
+ * Location 관련 Data Source의 구현체를 바인딩하는 Hilt Module입니다.
  * Strategy Pattern을 적용하여 구현체를 쉽게 교체할 수 있습니다.
  *
- * 현재는 WorkManagerLocationDataSource를 사용하지만,
- * 나중에 다른 구현체(ForegroundService, AlarmManager 등)로 교체 가능합니다.
+ * Remote Data Source:
+ * - 현재: WorkManagerLocationDataSource (WorkManager 기반)
+ * - 미래: ForegroundService, AlarmManager 등으로 교체 가능
+ *
+ * Local Data Source:
+ * - 현재: RoomLocationDataSource (Room Database 기반)
+ * - 미래: DataStore, SQLDelight 등으로 교체 가능
  */
 @Module
 @InstallIn(SingletonComponent::class)
@@ -82,4 +89,19 @@ abstract class LocationDataSourceModule {
     abstract fun bindLocationRemoteDataSource(
         impl: WorkManagerLocationDataSource
     ): LocationRemoteDataSource
+
+    /**
+     * LocationLocalDataSource 인터페이스를
+     * RoomLocationDataSource 구현체에 바인딩합니다.
+     *
+     * 다른 구현체로 교체하려면 이 메서드만 수정하면 됩니다.
+     *
+     * @param impl RoomLocationDataSource 구현체
+     * @return LocationLocalDataSource 인터페이스
+     */
+    @Binds
+    @Singleton
+    abstract fun bindLocationLocalDataSource(
+        impl: RoomLocationDataSource
+    ): LocationLocalDataSource
 }
