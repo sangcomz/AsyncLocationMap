@@ -1,3 +1,6 @@
+import java.util.Properties
+import kotlin.apply
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +8,15 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.compose.compiler)
 }
+
+val localProps = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) {
+        file.inputStream().use { load(it) }
+    }
+}
+
+val mapsApiKey = localProps.getProperty("MAPS_API_KEY") ?: ""
 
 android {
     namespace = "io.github.sangcomz.asynclocationmap"
@@ -19,8 +31,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // Google Maps API Key
-        val mapsApiKey = project.findProperty("MAPS_API_KEY") as String? ?: ""
         manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 

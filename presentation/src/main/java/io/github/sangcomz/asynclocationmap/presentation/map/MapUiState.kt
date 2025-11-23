@@ -11,11 +11,15 @@ package io.github.sangcomz.asynclocationmap.presentation.map
  * @property error 에러 메시지 (null이면 에러 없음)
  * @property hasLocationPermission 위치 권한 보유 여부
  * @property hasBackgroundLocationPermission 백그라운드 위치 권한 보유 여부
+ * @property isBottomSheetVisible BottomSheet 표시 여부
+ * @property selectedLocationId 선택된 위치의 ID (카메라 이동용, null이면 최근 위치로 이동)
  */
 data class MapUiState(
     val locations: List<LocationUiModel> = emptyList(),
     val isLoading: Boolean = false,
     val error: String? = null,
     val hasLocationPermission: Boolean = false,
-    val hasBackgroundLocationPermission: Boolean = false
+    val hasBackgroundLocationPermission: Boolean = false,
+    val isBottomSheetVisible: Boolean = false,
+    val selectedLocationId: Long? = null
 )
