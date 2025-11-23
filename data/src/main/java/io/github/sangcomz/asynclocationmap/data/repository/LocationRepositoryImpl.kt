@@ -36,7 +36,12 @@ class LocationRepositoryImpl @Inject constructor(
      * - 미래: ForegroundService, AlarmManager 등 다른 방식으로 교체 가능
      */
     override suspend fun requestLocationUpdate() {
-        remoteDataSource.requestLocationUpdate()
+        try {
+            remoteDataSource.requestLocationUpdate()
+        } catch (e: Exception) {
+            // Optionally, log the exception here
+            throw e // Propagate the exception to the caller
+        }
     }
 
     /**
