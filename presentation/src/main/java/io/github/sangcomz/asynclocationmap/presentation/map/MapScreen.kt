@@ -3,11 +3,13 @@ package io.github.sangcomz.asynclocationmap.presentation.map
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -15,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -82,14 +83,14 @@ fun MapScreen(
     // 카메라 위치 상태 (현재 위치로 이동하기 위해 사용)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
-            uiState.lastCurrentLocation ?: com.google.android.gms.maps.model.LatLng(DEFAULT_LAT, DEFAULT_LNG), // 기본값: 서울
+            uiState.fetchedCurrentLocation ?: com.google.android.gms.maps.model.LatLng(DEFAULT_LAT, DEFAULT_LNG), // 기본값: 서울
             DEFAULT_ZOOM
         )
     }
 
     // 현재 위치가 변경되면 카메라 이동
-    LaunchedEffect(uiState.lastCurrentLocation) {
-        uiState.lastCurrentLocation?.let { location ->
+    LaunchedEffect(uiState.fetchedCurrentLocation) {
+        uiState.fetchedCurrentLocation?.let { location ->
             cameraPositionState.animate(
                 update = CameraUpdateFactory.newLatLngZoom(location, DEFAULT_ZOOM),
                 durationMs = 1000
@@ -113,7 +114,9 @@ fun MapScreen(
             ) {
                 if (uiState.isLoading) {
                     CircularProgressIndicator(
-                        modifier = Modifier.padding(12.dp)
+                        modifier = Modifier.size(24.dp),
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        strokeWidth = 2.dp
                     )
                 } else {
                     Icon(

@@ -57,8 +57,9 @@ class MapViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             locations = latLngList,
-                            lastCurrentLocation = latLngList.first(),
-                            error = null
+                            fetchedCurrentLocation = latLngList.firstOrNull(),
+                            error = null,
+                            isLoading = false
                         )
                     }
                 }
@@ -81,9 +82,6 @@ class MapViewModel @Inject constructor(
             _uiState.update { it.copy(isLoading = true, error = null) }
             try {
                 requestLocationUpdateUseCase()
-                // WorkManager가 비동기로 실행되므로 즉시 반환
-                // 실제 위치는 Room Flow를 통해 자동으로 업데이트됨
-                _uiState.update { it.copy(isLoading = false) }
             } catch (e: Exception) {
                 _uiState.update {
                     it.copy(
