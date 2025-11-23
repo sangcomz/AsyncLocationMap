@@ -47,6 +47,11 @@ import com.google.maps.android.compose.rememberCameraPositionState
  *
  * @param viewModel MapViewModel (Hilt를 통해 자동 주입)
  */
+
+private const val DEFAULT_LAT = 37.5665
+private const val DEFAULT_LNG = 126.9780
+private const val DEFAULT_ZOOM = 15f
+
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun MapScreen(
@@ -82,15 +87,15 @@ fun MapScreen(
     // 카메라 위치 상태 (현재 위치로 이동하기 위해 사용)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
-            uiState.currentLocation ?: com.google.android.gms.maps.model.LatLng(37.5665, 126.9780), // 기본값: 서울
+            uiState.lastCurrentLocation ?: com.google.android.gms.maps.model.LatLng(DEFAULT_LAT, DEFAULT_LNG), // 기본값: 서울
             15f
         )
     }
 
     // 현재 위치가 변경되면 카메라 이동
-    LaunchedEffect(uiState.currentLocation) {
-        uiState.currentLocation?.let { location ->
-            cameraPositionState.position = CameraPosition.fromLatLngZoom(location, 15f)
+    LaunchedEffect(uiState.lastCurrentLocation) {
+        uiState.lastCurrentLocation?.let { location ->
+            cameraPositionState.position = CameraPosition.fromLatLngZoom(location, DEFAULT_ZOOM)
         }
     }
 

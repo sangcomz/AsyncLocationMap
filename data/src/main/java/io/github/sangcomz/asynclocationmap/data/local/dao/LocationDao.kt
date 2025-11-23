@@ -2,6 +2,7 @@ package io.github.sangcomz.asynclocationmap.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import io.github.sangcomz.asynclocationmap.data.local.entity.LocationEntity
 import kotlinx.coroutines.flow.Flow
@@ -29,7 +30,7 @@ interface LocationDao {
      *
      * @param location 저장할 위치 정보
      */
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLocation(location: LocationEntity)
 
     /**

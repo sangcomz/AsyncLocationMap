@@ -57,7 +57,7 @@ class MapViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             locations = latLngList,
-                            currentLocation = latLngList.lastOrNull(),
+                            lastCurrentLocation = latLngList.lastOrNull(),
                             error = null
                         )
                     }

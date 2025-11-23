@@ -17,6 +17,7 @@ fun AsyncLocationMapTheme(
 ) {
     MaterialTheme(
         colorScheme = LightColorScheme,
+        typography = Typography,
         content = content
     )
 }
