@@ -1,6 +1,5 @@
 package io.github.sangcomz.asynclocationmap.presentation.map
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -15,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -120,30 +118,19 @@ fun MapScreen(
             }
         }
     ) { paddingValues ->
-        Box(
+        // Google Map
+        GoogleMap(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding(paddingValues),
+            cameraPositionState = cameraPositionState
         ) {
-            // Google Map
-            GoogleMap(
-                modifier = Modifier.fillMaxSize(),
-                cameraPositionState = cameraPositionState
-            ) {
-                // 저장된 모든 위치에 마커 표시
-                uiState.locations.forEach { location ->
-                    Marker(
-                        state = MarkerState(position = location),
-                        title = "위치",
-                        snippet = "위도: ${location.latitude}, 경도: ${location.longitude}"
-                    )
-                }
-            }
-
-            // 로딩 인디케이터 (중앙 표시)
-            if (uiState.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
+            // 저장된 모든 위치에 마커 표시
+            uiState.locations.forEach { location ->
+                Marker(
+                    state = MarkerState(position = location),
+                    title = "위치",
+                    snippet = "위도: ${location.latitude}, 경도: ${location.longitude}"
                 )
             }
         }
