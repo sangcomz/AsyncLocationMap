@@ -83,16 +83,17 @@ fun MapScreen(
     // 카메라 위치 상태 (현재 위치로 이동하기 위해 사용)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
-            uiState.fetchedCurrentLocation ?: com.google.android.gms.maps.model.LatLng(DEFAULT_LAT, DEFAULT_LNG), // 기본값: 서울
+            uiState.locations.firstOrNull()?.latLng ?: com.google.android.gms.maps.model.LatLng(DEFAULT_LAT, DEFAULT_LNG), // 기본값: 서울
             DEFAULT_ZOOM
         )
     }
 
-    // 현재 위치가 변경되면 카메라 이동
-    LaunchedEffect(uiState.fetchedCurrentLocation) {
-        uiState.fetchedCurrentLocation?.let { location ->
+    // 가장 최근 위치의 timestamp를 사용하여 카메라 이동
+    // 동일한 위치라도 timestamp가 변경되므로 카메라 이동이 트리거됨
+    LaunchedEffect(uiState.locations.firstOrNull()?.timestamp) {
+        uiState.locations.firstOrNull()?.let { location ->
             cameraPositionState.animate(
-                update = CameraUpdateFactory.newLatLngZoom(location, DEFAULT_ZOOM),
+                update = CameraUpdateFactory.newLatLngZoom(location.latLng, DEFAULT_ZOOM),
                 durationMs = 1000
             )
         }
@@ -103,12 +104,15 @@ fun MapScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    if (locationPermissionState.status.isGranted) {
-                        // 권한이 있으면 위치 조회 시작
-                        viewModel.onRequestCurrentLocation()
-                    } else {
-                        // 권한이 없으면 권한 요청
-                        locationPermissionState.launchPermissionRequest()
+                    // 로딩 중이 아닐 때만 클릭 가능
+                    if (!uiState.isLoading) {
+                        if (locationPermissionState.status.isGranted) {
+                            // 권한이 있으면 위치 조회 시작
+                            viewModel.onRequestCurrentLocation()
+                        } else {
+                            // 권한이 없으면 권한 요청
+                            locationPermissionState.launchPermissionRequest()
+                        }
                     }
                 }
             ) {
@@ -138,11 +142,11 @@ fun MapScreen(
                 cameraPositionState = cameraPositionState
             ) {
                 // 저장된 모든 위치에 마커 표시
-                uiState.locations.forEach { location ->
+                uiState.locations.forEach { locationUiModel ->
                     Marker(
-                        state = MarkerState(position = location),
+                        state = MarkerState(position = locationUiModel.latLng),
                         title = "위치",
-                        snippet = "위도: ${location.latitude}, 경도: ${location.longitude}"
+                        snippet = "위도: ${locationUiModel.latLng.latitude}, 경도: ${locationUiModel.latLng.longitude}"
                     )
                 }
             }

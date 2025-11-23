@@ -48,16 +48,20 @@ class MapViewModel @Inject constructor(
         viewModelScope.launch {
             observeLastLocationUseCase()
                 .map { locations ->
-                    locations.map { LatLng(it.latitude, it.longitude) }
+                    locations.map { location ->
+                        LocationUiModel(
+                            latLng = LatLng(location.latitude, location.longitude),
+                            timestamp = location.timestamp
+                        )
+                    }
                 }
                 .catch { exception ->
                     _uiState.update { it.copy(error = exception.message) }
                 }
-                .collect { latLngList ->
+                .collect { locationUiModels ->
                     _uiState.update {
                         it.copy(
-                            locations = latLngList,
-                            fetchedCurrentLocation = latLngList.firstOrNull(),
+                            locations = locationUiModels,
                             error = null,
                             isLoading = false
                         )
@@ -74,8 +78,8 @@ class MapViewModel @Inject constructor(
      * 1. isLoading = true 설정
      * 2. RequestLocationUpdateUseCase 호출
      * 3. WorkManager가 LocationWorker를 백그라운드에서 실행
-     * 4. LocationWorker가 위치를 조회하고 Room DB에 저장
-     * 5. Room DB Flow를 통해 자동으로 UI 업데이트
+     * 4. LocationWorker가 위치를 조회하고 timestamp와 함께 Room DB에 저장
+     * 5. Room DB Flow를 통해 자동으로 UI 업데이트 (locations에 timestamp 포함)
      */
     fun onRequestCurrentLocation() {
         viewModelScope.launch {
