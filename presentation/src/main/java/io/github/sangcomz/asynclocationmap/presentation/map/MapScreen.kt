@@ -1,19 +1,12 @@
 package io.github.sangcomz.asynclocationmap.presentation.map
 
-import android.os.Build
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -21,12 +14,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -77,18 +68,8 @@ fun MapScreen(
         permission = android.Manifest.permission.ACCESS_FINE_LOCATION
     ) { isGranted ->
         if (isGranted) {
-            // 권한이 허용되면 즉시 위치 조회 시작
             viewModel.onRequestCurrentLocation()
         }
-    }
-
-    // 백그라운드 위치 권한 상태 관리 (Android 10 이상)
-    val backgroundLocationPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        rememberPermissionState(
-            permission = android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
-        )
-    } else {
-        null
     }
 
     // 에러 메시지 표시
@@ -130,10 +111,6 @@ fun MapScreen(
                             !locationPermissionState.status.isGranted -> {
                                 locationPermissionState.launchPermissionRequest()
                             }
-                            // 위치 권한은 있지만 백그라운드 권한이 없으면 백그라운드 권한 요청
-                            backgroundLocationPermissionState?.status?.isGranted == false -> {
-                                backgroundLocationPermissionState.launchPermissionRequest()
-                            }
                             // 모든 권한이 있으면 위치 조회 시작
                             else -> {
                                 viewModel.onRequestCurrentLocation()
@@ -162,50 +139,6 @@ fun MapScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // 백그라운드 위치 권한 경고 배너
-            if (locationPermissionState.status.isGranted && backgroundLocationPermissionState?.status?.isGranted == false) {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(12.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Info,
-                            contentDescription = "경고",
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Column(
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            Text(
-                                text = "백그라운드 위치 권한 필요",
-                                style = MaterialTheme.typography.titleSmall,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Text(
-                                text = "앱이 백그라운드에 있을 때 위치를 가져올 수 없습니다",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                        Button(
-                            onClick = {
-                                backgroundLocationPermissionState.launchPermissionRequest()
-                            }
-                        ) {
-                            Text("허용")
-                        }
-                    }
-                }
-            }
-
             // Google Map
             Box(modifier = Modifier.weight(1f)) {
                 GoogleMap(
