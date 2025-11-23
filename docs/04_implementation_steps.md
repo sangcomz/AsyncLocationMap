@@ -36,7 +36,7 @@
 - [ ] `domain/repository/LocationRepository.kt` 생성
 
 ### 2.3 Use Cases 구현
-- [ ] `domain/usecase/GetLocationsUseCase.kt`
+- [ ] `domain/usecase/ObserveLastLocationUseCase.kt`
 - [ ] `domain/usecase/RequestLocationUpdateUseCase.kt`
 
 ---
@@ -242,7 +242,7 @@ AsyncLocationMap/
 │   │   ├── repository/
 │   │   │   └── LocationRepository.kt
 │   │   └── usecase/
-│   │       ├── GetLocationsUseCase.kt
+│   │       ├── ObserveLastLocationUseCase.kt
 │   │       └── RequestLocationUpdateUseCase.kt
 │   └── build.gradle.kts
 │

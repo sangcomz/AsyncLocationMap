@@ -25,7 +25,7 @@ class MapViewModel(
 ```kotlin
 @HiltViewModel
 class MapViewModel @Inject constructor(
-    private val getLocationsUseCase: GetLocationsUseCase,
+    private val observeLastLocationUseCase: ObserveLastLocationUseCase,
     private val requestLocationUpdateUseCase: RequestLocationUpdateUseCase
 ) : ViewModel() {
     // 모든 의존성이 생성자를 통해 주입됨
@@ -38,7 +38,7 @@ class MapViewModel @Inject constructor(
 
 ```kotlin
 // UseCase는 하나의 비즈니스 로직만 담당
-class GetLocationsUseCase @Inject constructor(
+class ObserveLastLocationUseCase @Inject constructor(
     private val repository: LocationRepository
 ) {
     operator fun invoke(): Flow<List<Location>> {
@@ -67,16 +67,16 @@ Domain 레이어는 순수 Kotlin이므로 가장 테스트하기 쉽습니다.
 #### Use Case 테스트 예시
 
 ```kotlin
-// domain/src/test/kotlin/usecase/GetLocationsUseCaseTest.kt
-class GetLocationsUseCaseTest {
+// domain/src/test/kotlin/usecase/ObserveLastLocationUseCaseTest.kt
+class ObserveLastLocationUseCaseTest {
 
     private lateinit var repository: LocationRepository
-    private lateinit var useCase: GetLocationsUseCase
+    private lateinit var useCase: ObserveLastLocationUseCase
 
     @Before
     fun setup() {
         repository = mockk() // MockK 사용
-        useCase = GetLocationsUseCase(repository)
+        useCase = ObserveLastLocationUseCase(repository)
     }
 
     @Test
@@ -203,16 +203,16 @@ class MapViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
 
-    private lateinit var getLocationsUseCase: GetLocationsUseCase
+    private lateinit var observeLastLocationUseCase: ObserveLastLocationUseCase
     private lateinit var requestLocationUpdateUseCase: RequestLocationUpdateUseCase
     private lateinit var viewModel: MapViewModel
 
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
-        getLocationsUseCase = mockk()
+        observeLastLocationUseCase = mockk()
         requestLocationUpdateUseCase = mockk()
-        viewModel = MapViewModel(getLocationsUseCase, requestLocationUpdateUseCase)
+        viewModel = MapViewModel(observeLastLocationUseCase, requestLocationUpdateUseCase)
     }
 
     @After
@@ -226,10 +226,10 @@ class MapViewModelTest {
         val expectedLocations = listOf(
             Location(1, 37.5, 127.0, 1234567890L)
         )
-        every { getLocationsUseCase() } returns flowOf(expectedLocations)
+        every { observeLastLocationUseCase() } returns flowOf(expectedLocations)
 
         // When
-        viewModel = MapViewModel(getLocationsUseCase, requestLocationUpdateUseCase)
+        viewModel = MapViewModel(observeLastLocationUseCase, requestLocationUpdateUseCase)
         testDispatcher.scheduler.advanceUntilIdle()
 
         // Then
@@ -239,7 +239,7 @@ class MapViewModelTest {
     @Test
     fun `onLocationButtonClick should update loading state`() = runTest {
         // Given
-        every { getLocationsUseCase() } returns flowOf(emptyList())
+        every { observeLastLocationUseCase() } returns flowOf(emptyList())
         coEvery { requestLocationUpdateUseCase() } just Runs
 
         // When
@@ -297,7 +297,7 @@ interface LocationRepository {
 
 ```kotlin
 // 기존 UseCase
-class GetLocationsUseCase @Inject constructor(...)
+class ObserveLastLocationUseCase @Inject constructor(...)
 class RequestLocationUpdateUseCase @Inject constructor(...)
 
 // 확장: 새로운 UseCase 추가

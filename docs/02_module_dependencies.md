@@ -102,7 +102,7 @@ domain/
 ├── repository/
 │   └── LocationRepository.kt (interface)
 └── usecase/
-    ├── GetLocationsUseCase.kt
+    ├── ObserveLastLocationUseCase.kt
     ├── SaveLocationUseCase.kt
     └── RequestLocationUpdateUseCase.kt
 ```
@@ -273,7 +273,7 @@ include(":data")
 
 [Domain Layer]
     RequestLocationUpdateUseCase
-    GetLocationsUseCase
+    ObserveLastLocationUseCase
     SaveLocationUseCase
         ↓ (Repository Interface)
 

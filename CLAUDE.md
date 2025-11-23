@@ -76,7 +76,7 @@ domain/src/main/java/com/example/asynclocationmap/domain/
 ├── repository/
 │   └── LocationRepository.kt            # Repository Interface
 └── usecase/
-    ├── GetLocationsUseCase.kt           # 위치 목록 조회
+    ├── ObserveLastLocationUseCase.kt           # 위치 목록 조회
     └── RequestLocationUpdateUseCase.kt  # 위치 업데이트 요청
 ```
 
@@ -219,7 +219,7 @@ app/src/main/java/com/example/asynclocationmap/
 [자동 UI 업데이트]
 8. LocationDao.getAllLocations() Flow emit
    ↓
-9. GetLocationsUseCase → MapViewModel
+9. ObserveLastLocationUseCase → MapViewModel
    ↓
 10. MapUiState 업데이트 (StateFlow)
    ↓
@@ -271,7 +271,7 @@ class MainActivity : ComponentActivity() { /* ... */ }
 ```kotlin
 @HiltViewModel
 class MapViewModel @Inject constructor(
-    private val getLocationsUseCase: GetLocationsUseCase,
+    private val observeLastLocationUseCase: ObserveLastLocationUseCase,
     private val requestLocationUpdateUseCase: RequestLocationUpdateUseCase
 ) : ViewModel()
 ```
@@ -527,7 +527,7 @@ class LocationRepositoryImpl {
 ### Phase 2: Domain Layer
 1. `Location.kt` (Domain Model)
 2. `LocationRepository.kt` (Interface)
-3. `GetLocationsUseCase.kt`
+3. `ObserveLastLocationUseCase.kt`
 4. `RequestLocationUpdateUseCase.kt`
 
 ### Phase 3: Data Layer

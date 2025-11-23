@@ -27,7 +27,7 @@ Room Database (저장)
 [UI 업데이트 트리거]
 LocationRepository.getLocations() (Flow)
     ↓
-GetLocationsUseCase
+ObserveLastLocationUseCase
     ↓
 MapViewModel (StateFlow 업데이트)
     ↓
@@ -70,7 +70,7 @@ interface LocationRepository {
 
 #### Use Cases
 
-**GetLocationsUseCase**:
+**ObserveLastLocationUseCase**:
 ```kotlin
 package com.example.asynclocationmap.domain.usecase
 
@@ -79,7 +79,7 @@ import com.example.asynclocationmap.domain.repository.LocationRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetLocationsUseCase @Inject constructor(
+class ObserveLastLocationUseCase @Inject constructor(
     private val repository: LocationRepository
 ) {
     operator fun invoke(): Flow<List<Location>> {
@@ -300,7 +300,7 @@ package com.example.asynclocationmap.presentation.ui.map
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.asynclocationmap.domain.usecase.GetLocationsUseCase
+import com.example.asynclocationmap.domain.usecase.ObserveLastLocationUseCase
 import com.example.asynclocationmap.domain.usecase.RequestLocationUpdateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -313,7 +313,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
-    private val getLocationsUseCase: GetLocationsUseCase,
+    private val observeLastLocationUseCase: ObserveLastLocationUseCase,
     private val requestLocationUpdateUseCase: RequestLocationUpdateUseCase
 ) : ViewModel() {
 
@@ -326,7 +326,7 @@ class MapViewModel @Inject constructor(
 
     private fun observeLocations() {
         viewModelScope.launch {
-            getLocationsUseCase()
+            observeLastLocationUseCase()
                 .catch { e ->
                     _uiState.update { it.copy(error = e.message) }
                 }
