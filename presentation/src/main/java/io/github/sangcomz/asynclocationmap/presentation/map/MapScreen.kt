@@ -82,7 +82,7 @@ fun MapScreen(
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
             uiState.lastCurrentLocation ?: com.google.android.gms.maps.model.LatLng(DEFAULT_LAT, DEFAULT_LNG), // 기본값: 서울
-            15f
+            DEFAULT_ZOOM
         )
     }
 
