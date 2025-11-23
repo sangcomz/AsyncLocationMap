@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hilt)
@@ -7,21 +7,14 @@ plugins {
 }
 
 android {
-    namespace = "io.github.sangcomz.asynclocationmap"
+    namespace = "com.example.asynclocationmap.presentation"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "io.github.sangcomz.asynclocationmap"
         minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        // Google Maps API Key
-        val mapsApiKey = project.findProperty("MAPS_API_KEY") as String? ?: ""
-        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -49,10 +42,8 @@ android {
 }
 
 dependencies {
-    // Modules
-    implementation(project(":presentation"))
+    // Domain module
     implementation(project(":domain"))
-    implementation(project(":data"))
 
     // AndroidX Core
     implementation(libs.androidx.core.ktx)
@@ -66,18 +57,36 @@ dependencies {
     implementation(libs.compose.activity)
     debugImplementation(libs.compose.ui.tooling)
 
+    // Lifecycle
+    implementation(libs.lifecycle.viewmodel.compose)
+    implementation(libs.lifecycle.viewmodel.ktx)
+
     // Hilt
     implementation(libs.hilt.android)
+    implementation(libs.hilt.navigation.compose)
     kapt(libs.hilt.compiler)
 
-    // WorkManager (for HiltWorkerFactory)
-    implementation(libs.work.runtime.ktx)
+    // Google Maps Compose
+    implementation(libs.maps.compose)
+    implementation(libs.play.services.maps)
+
+    // Accompanist Permissions
+    implementation(libs.accompanist.permissions)
+
+    // Coroutines
+    implementation(libs.coroutines.android)
 
     // Unit Test
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.turbine)
+    testImplementation(libs.androidx.arch.core.testing)
 
     // UI Test
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.compose.ui.test.junit4)
     debugImplementation(libs.compose.ui.test.manifest)
+    androidTestImplementation(libs.hilt.testing)
+    kaptAndroidTest(libs.hilt.compiler)
 }

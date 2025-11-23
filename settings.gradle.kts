@@ -21,3 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "AsyncLocationMap"
 include(":app")
+include(":presentation")
+include(":domain")
+include(":data")
