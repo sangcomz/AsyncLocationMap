@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
 }
 
@@ -46,7 +46,7 @@ dependencies {
     // Room
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
-    kapt(libs.room.compiler)
+    ksp(libs.room.compiler)
 
     // WorkManager
     implementation(libs.work.runtime.ktx)
@@ -54,8 +54,8 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.work)
-    kapt(libs.hilt.compiler)
-    kapt(libs.androidx.hilt.compiler)
+    ksp(libs.hilt.compiler)
+    ksp(libs.androidx.hilt.compiler)
 
     // Google Play Services Location
     implementation(libs.play.services.location)
@@ -76,5 +76,5 @@ dependencies {
     androidTestImplementation(libs.room.testing)
     androidTestImplementation(libs.work.testing)
     androidTestImplementation(libs.hilt.testing)
-    kaptAndroidTest(libs.hilt.compiler)
+    kspAndroidTest(libs.hilt.compiler)
 }
