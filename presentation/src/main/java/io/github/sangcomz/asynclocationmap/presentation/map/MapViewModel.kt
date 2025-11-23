@@ -50,6 +50,7 @@ class MapViewModel @Inject constructor(
                 .map { locations ->
                     locations.map { location ->
                         LocationUiModel(
+                            id = location.id,
                             latLng = LatLng(location.latitude, location.longitude),
                             timestamp = location.timestamp
                         )
@@ -103,5 +104,42 @@ class MapViewModel @Inject constructor(
      */
     fun clearError() {
         _uiState.update { it.copy(error = null) }
+    }
+
+    /**
+     * BottomSheet의 표시 상태를 토글합니다.
+     */
+    fun toggleBottomSheet() {
+        _uiState.update { it.copy(isBottomSheetVisible = !it.isBottomSheetVisible) }
+    }
+
+    /**
+     * BottomSheet를 숨깁니다.
+     */
+    fun hideBottomSheet() {
+        _uiState.update { it.copy(isBottomSheetVisible = false) }
+    }
+
+    /**
+     * 위치를 선택하여 지도 카메라를 해당 위치로 이동합니다.
+     * BottomSheet의 위치 카드 클릭 시 호출됩니다.
+     *
+     * @param locationId 선택된 위치의 ID
+     */
+    fun onLocationSelected(locationId: Long) {
+        _uiState.update {
+            it.copy(
+                selectedLocationId = locationId,
+                isBottomSheetVisible = false  // BottomSheet를 닫음
+            )
+        }
+    }
+
+    /**
+     * 선택된 위치 상태를 초기화합니다.
+     * 카메라 이동 후 호출되어 중복 이동을 방지합니다.
+     */
+    fun clearSelectedLocation() {
+        _uiState.update { it.copy(selectedLocationId = null) }
     }
 }
