@@ -1,35 +1,28 @@
 package io.github.sangcomz.asynclocationmap.presentation.map
 
-import android.os.Build
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -38,11 +31,14 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MapsComposeExperimentalApi
 import com.google.maps.android.compose.clustering.Clustering
 import com.google.maps.android.compose.rememberCameraPositionState
+import io.github.sangcomz.asynclocationmap.presentation.R
 import io.github.sangcomz.asynclocationmap.presentation.map.components.LocationHistoryBottomSheet
 
 /**
@@ -68,7 +64,7 @@ private const val DEFAULT_LAT = 37.5665
 private const val DEFAULT_LNG = 126.9780
 private const val DEFAULT_ZOOM = 15f
 
-@OptIn(ExperimentalPermissionsApi::class, MapsComposeExperimentalApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalPermissionsApi::class, MapsComposeExperimentalApi::class)
 @Composable
 fun MapScreen(
     viewModel: MapViewModel = hiltViewModel()
@@ -127,81 +123,100 @@ fun MapScreen(
         }
     }
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            // Google Map
-            GoogleMap(
-                modifier = Modifier.fillMaxSize(),
-                cameraPositionState = cameraPositionState,
-                uiSettings = remember {
-                    MapUiSettings(
-                        zoomControlsEnabled = false,
-                        zoomGesturesEnabled = true
+    Box(modifier = Modifier.fillMaxSize()) {
+        // 다크 모드 감지
+        val isDarkTheme = isSystemInDarkTheme()
+        val context = LocalContext.current
+
+        // 다크 테마일 때 맵 스타일 적용
+        val mapProperties = remember(isDarkTheme) {
+            if (isDarkTheme) {
+                MapProperties(
+                    mapStyleOptions = MapStyleOptions.loadRawResourceStyle(
+                        context,
+                        R.raw.map_style_dark
                     )
-                }
-            ) {
-                // 저장된 모든 위치에 클러스터링 마커 표시
-                Clustering(
-                    items = uiState.locations
+                )
+            } else {
+                MapProperties()
+            }
+        }
+
+        // Google Map
+        GoogleMap(
+            modifier = Modifier.fillMaxSize(),
+            cameraPositionState = cameraPositionState,
+            properties = mapProperties,
+            uiSettings = remember {
+                MapUiSettings(
+                    zoomControlsEnabled = false,
+                    zoomGesturesEnabled = true
                 )
             }
+        ) {
+            // 저장된 모든 위치에 클러스터링 마커 표시
+            Clustering(
+                items = uiState.locations
+            )
+        }
 
-            // FAB들 (BottomSheet이 열려있을 때는 숨김)
-            if (!uiState.isBottomSheetVisible) {
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    // 위치 목록 FAB (저장된 위치가 있을 때만 표시 - 위쪽)
-                    if (uiState.locations.isNotEmpty()) {
-                        FloatingActionButton(
-                            onClick = { viewModel.toggleBottomSheet() }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.List,
-                                contentDescription = "위치 목록"
-                            )
-                        }
-                    }
+        // Snackbar (상단에 표시)
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(16.dp)
+        )
 
-                    // 현재 위치 FAB (아래쪽 - Primary)
+        // FAB들 (BottomSheet이 열려있을 때는 숨김)
+        if (!uiState.isBottomSheetVisible) {
+            Column(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                // 위치 목록 FAB (저장된 위치가 있을 때만 표시 - 위쪽)
+                if (uiState.locations.isNotEmpty()) {
                     FloatingActionButton(
-                        onClick = {
-                            // 로딩 중이 아닐 때만 클릭 가능
-                            if (!uiState.isLoading) {
-                                when {
-                                    // 위치 권한이 없으면 위치 권한 요청
-                                    !locationPermissionState.status.isGranted -> {
-                                        locationPermissionState.launchPermissionRequest()
-                                    }
-                                    // 모든 권한이 있으면 위치 조회 시작
-                                    else -> {
-                                        viewModel.onRequestCurrentLocation()
-                                    }
+                        onClick = { viewModel.toggleBottomSheet() }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.List,
+                            contentDescription = "위치 목록"
+                        )
+                    }
+                }
+
+                // 현재 위치 FAB (아래쪽 - Primary)
+                FloatingActionButton(
+                    onClick = {
+                        // 로딩 중이 아닐 때만 클릭 가능
+                        if (!uiState.isLoading) {
+                            when {
+                                // 위치 권한이 없으면 위치 권한 요청
+                                !locationPermissionState.status.isGranted -> {
+                                    locationPermissionState.launchPermissionRequest()
+                                }
+                                // 모든 권한이 있으면 위치 조회 시작
+                                else -> {
+                                    viewModel.onRequestCurrentLocation()
                                 }
                             }
                         }
-                    ) {
-                        if (uiState.isLoading) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(24.dp),
-                                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                strokeWidth = 2.dp
-                            )
-                        } else {
-                            Icon(
-                                imageVector = Icons.Default.LocationOn,
-                                contentDescription = "현재 위치"
-                            )
-                        }
+                    }
+                ) {
+                    if (uiState.isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.LocationOn,
+                            contentDescription = "현재 위치"
+                        )
                     }
                 }
             }
