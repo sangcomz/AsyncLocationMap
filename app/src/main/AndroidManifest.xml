@@ -12,11 +12,11 @@
         android:minSdkVersion="29" />
 
     <!-- Foreground Service 권한 (Android 9 이상) -->
-    <uses-permission
-        android:name="android.permission.FOREGROUND_SERVICE"
-        android:maxSdkVersion="33" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <uses-permission
+        android:name="android.permission.FOREGROUND_SERVICE_LOCATION"
+        android:minSdkVersion="34" />
 
     <!-- 인터넷 권한 (Google Maps 사용) -->
     <uses-permission android:name="android.permission.INTERNET" />
