@@ -71,6 +71,7 @@ dependencies {
 
     // Google Maps Compose
     implementation(libs.maps.compose)
+    implementation(libs.maps.compose.utils)
     implementation(libs.play.services.maps)
 
     // Accompanist Permissions
