@@ -96,16 +96,6 @@ class MapViewModel @Inject constructor(
     }
 
     /**
-     * 위치 권한 상태를 업데이트합니다.
-     * Accompanist Permissions에서 권한 상태가 변경될 때 호출됩니다.
-     *
-     * @param granted 권한 허용 여부
-     */
-    fun updateLocationPermission(granted: Boolean) {
-        _uiState.update { it.copy(hasLocationPermission = granted) }
-    }
-
-    /**
      * 에러 메시지를 지웁니다.
      * 사용자가 에러 Snackbar를 닫을 때 호출됩니다.
      */

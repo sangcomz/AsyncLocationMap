@@ -64,16 +64,10 @@ fun MapScreen(
     val locationPermissionState = rememberPermissionState(
         permission = android.Manifest.permission.ACCESS_FINE_LOCATION
     ) { isGranted ->
-        viewModel.updateLocationPermission(isGranted)
         if (isGranted) {
             // 권한이 허용되면 즉시 위치 조회 시작
             viewModel.onRequestCurrentLocation()
         }
-    }
-
-    // 권한 상태를 ViewModel에 동기화
-    LaunchedEffect(locationPermissionState.status.isGranted) {
-        viewModel.updateLocationPermission(locationPermissionState.status.isGranted)
     }
 
     // 에러 메시지 표시
