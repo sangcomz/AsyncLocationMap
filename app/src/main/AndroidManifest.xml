@@ -25,6 +25,19 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
 
+        <!-- WorkManager 자동 초기화 비활성화 -->
+        <!-- MyApplication에서 HiltWorkerFactory와 함께 수동으로 초기화 -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
