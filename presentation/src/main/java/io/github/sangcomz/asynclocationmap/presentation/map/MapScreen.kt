@@ -139,13 +139,6 @@ fun MapScreen(
                     )
                 }
             }
-
-            // 로딩 인디케이터 (중앙 표시)
-            if (uiState.isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
         }
     }
 }
