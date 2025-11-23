@@ -98,7 +98,10 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.5.0")
 
     // Unit Test
+    testImplementation(project(":testing"))
     testImplementation(libs.junit)
+    testImplementation(libs.coroutines.test)
+    testImplementation(libs.turbine)
     testImplementation(libs.mockk)
     testImplementation(libs.coroutines.test)
     testImplementation(libs.turbine)

@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.coroutines.play.services)
 
     // Unit Test
+    testImplementation(project(":testing"))
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
     testImplementation(libs.coroutines.test)
