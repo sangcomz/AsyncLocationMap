@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
     kapt(libs.hilt.compiler)
+    kapt(libs.androidx.hilt.compiler)
 
     // Google Maps Compose
     implementation(libs.maps.compose)

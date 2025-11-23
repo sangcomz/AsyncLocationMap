@@ -2,7 +2,9 @@ package io.github.sangcomz.asynclocationmap.data.di
 
 import android.content.Context
 import androidx.work.WorkManager
+import io.github.sangcomz.asynclocationmap.data.datasource.FusedLocationProvider
 import io.github.sangcomz.asynclocationmap.data.datasource.LocationLocalDataSource
+import io.github.sangcomz.asynclocationmap.data.datasource.LocationProvider
 import io.github.sangcomz.asynclocationmap.data.datasource.LocationRemoteDataSource
 import io.github.sangcomz.asynclocationmap.data.datasource.RoomLocationDataSource
 import io.github.sangcomz.asynclocationmap.data.datasource.WorkManagerLocationDataSource
@@ -70,6 +72,10 @@ object LocationModule {
  * Local Data Source:
  * - 현재: RoomLocationDataSource (Room Database 기반)
  * - 미래: DataStore, SQLDelight 등으로 교체 가능
+ *
+ * Location Provider:
+ * - 현재: FusedLocationProvider (Google Play Services 기반)
+ * - 미래: MockLocationProvider, NetworkLocationProvider 등으로 교체 가능
  */
 @Module
 @InstallIn(SingletonComponent::class)
@@ -104,4 +110,19 @@ abstract class LocationDataSourceModule {
     abstract fun bindLocationLocalDataSource(
         impl: RoomLocationDataSource
     ): LocationLocalDataSource
+
+    /**
+     * LocationProvider 인터페이스를
+     * FusedLocationProvider 구현체에 바인딩합니다.
+     *
+     * 다른 구현체로 교체하려면 이 메서드만 수정하면 됩니다.
+     *
+     * @param impl FusedLocationProvider 구현체
+     * @return LocationProvider 인터페이스
+     */
+    @Binds
+    @Singleton
+    abstract fun bindLocationProvider(
+        impl: FusedLocationProvider
+    ): LocationProvider
 }
