@@ -131,7 +131,7 @@ fun MapScreen(
                                 locationPermissionState.launchPermissionRequest()
                             }
                             // 위치 권한은 있지만 백그라운드 권한이 없으면 백그라운드 권한 요청
-                            !backgroundLocationPermissionState.status.isGranted -> {
+                            backgroundLocationPermissionState?.status?.isGranted == false -> {
                                 backgroundLocationPermissionState.launchPermissionRequest()
                             }
                             // 모든 권한이 있으면 위치 조회 시작
@@ -163,7 +163,7 @@ fun MapScreen(
                 .padding(paddingValues)
         ) {
             // 백그라운드 위치 권한 경고 배너
-            if (locationPermissionState.status.isGranted && !backgroundLocationPermissionState.status.isGranted) {
+            if (locationPermissionState.status.isGranted && backgroundLocationPermissionState?.status?.isGranted == false) {
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
