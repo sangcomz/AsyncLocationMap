@@ -10,10 +10,12 @@ package io.github.sangcomz.asynclocationmap.presentation.map
  * @property isLoading 위치 조회 중인지 여부
  * @property error 에러 메시지 (null이면 에러 없음)
  * @property hasLocationPermission 위치 권한 보유 여부
+ * @property hasBackgroundLocationPermission 백그라운드 위치 권한 보유 여부
  */
 data class MapUiState(
     val locations: List<LocationUiModel> = emptyList(),
     val isLoading: Boolean = false,
     val error: String? = null,
-    val hasLocationPermission: Boolean = false
+    val hasLocationPermission: Boolean = false,
+    val hasBackgroundLocationPermission: Boolean = false
 )
