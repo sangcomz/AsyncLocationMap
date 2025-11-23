@@ -26,12 +26,29 @@ interface LocationDao {
     fun getAllLocations(): Flow<List<LocationEntity>>
 
     /**
+     * 가장 최근 위치 정보를 조회합니다.
+     *
+     * @return 가장 최근 위치 정보 (없으면 null)
+     */
+    @Query("SELECT * FROM locations ORDER BY timestamp DESC LIMIT 1")
+    suspend fun getLastLocation(): LocationEntity?
+
+    /**
      * 위치 정보를 데이터베이스에 삽입합니다.
      *
      * @param location 저장할 위치 정보
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLocation(location: LocationEntity)
+
+    /**
+     * 특정 위치 정보를 검색합니다.
+     *
+     * @param latitude 검색할 위도
+     * @param longitude 검색할 경도
+     */
+    @Query("SELECT * FROM locations WHERE latitude = :latitude AND longitude = :longitude")
+    suspend fun findLocationByLatLng(latitude: Double, longitude: Double): LocationEntity?
 
     /**
      * 모든 위치 정보를 삭제합니다.

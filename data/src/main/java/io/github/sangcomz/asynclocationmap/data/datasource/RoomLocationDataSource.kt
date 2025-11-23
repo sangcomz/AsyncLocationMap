@@ -3,6 +3,7 @@ package io.github.sangcomz.asynclocationmap.data.datasource
 import io.github.sangcomz.asynclocationmap.data.local.dao.LocationDao
 import io.github.sangcomz.asynclocationmap.data.mapper.toDomain
 import io.github.sangcomz.asynclocationmap.data.mapper.toEntity
+import io.github.sangcomz.asynclocationmap.data.util.LocationNormalizer
 import io.github.sangcomz.asynclocationmap.domain.model.Location
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -41,9 +42,20 @@ class RoomLocationDataSource @Inject constructor(
      * 위치 정보를 Room Database에 저장합니다.
      * Domain Model을 Entity로 변환하여 저장합니다.
      *
+     * 중복 위치의 경우 타임스탬프 값을 업데이트해서 DB에 저장합니다.
+     * 중복 검색 시 LocationNormalizer를 사용하여 정규화된 좌표로 검색합니다.
+     *
      * @param location 저장할 위치 정보
      */
     override suspend fun insertLocation(location: Location) {
-        locationDao.insertLocation(location.toEntity())
+        // 정규화된 좌표로 중복 위치 검색
+        val (normalizedLat, normalizedLng) = LocationNormalizer.normalize(location.latitude, location.longitude)
+        val savedLocation = locationDao.findLocationByLatLng(normalizedLat, normalizedLng)
+
+        if (savedLocation != null) {
+            return locationDao.insertLocation(savedLocation.copy(timestamp = location.timestamp))
+        }
+
+        return locationDao.insertLocation(location.toEntity())
     }
 }
