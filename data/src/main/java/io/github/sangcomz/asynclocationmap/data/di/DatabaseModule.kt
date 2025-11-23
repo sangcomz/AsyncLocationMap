@@ -2,8 +2,11 @@ package io.github.sangcomz.asynclocationmap.data.di
 
 import android.content.Context
 import androidx.room.Room
+import io.github.sangcomz.asynclocationmap.data.datasource.LocationLocalDataSource
+import io.github.sangcomz.asynclocationmap.data.datasource.RoomLocationDataSource
 import io.github.sangcomz.asynclocationmap.data.local.dao.LocationDao
 import io.github.sangcomz.asynclocationmap.data.local.db.LocationDatabase
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -51,3 +54,4 @@ object DatabaseModule {
         return database.locationDao()
     }
 }
+
